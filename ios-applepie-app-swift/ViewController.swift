@@ -27,18 +27,19 @@ class ViewController: UIViewController {
         newRound()
     }
     
-    var activeGame: Game!
+    var ActiveGame: Game!
     
     func newRound() {
         let newWord = listOfWords.removeFirst()
-        activeGame = Game(word: newWord, incorrectWord: incorrectMovesAllowed, guessedLetters: [])
+        ActiveGame = Game(word: newWord, incorrectWord: incorrectMovesAllowed, guessedLetters: [])
         updateUI()
         
     }
     
     func updateUI() {
+        WordLabel.text = ActiveGame.formatWord
         ScoreLabel.text = "Wins: \(totalWins), Losses: \(totalLosses)"
-        TreeImageView.image = UIImage(named: "Tree \(activeGame.incorrectWord)")
+        TreeImageView.image = UIImage(named: "Tree \(ActiveGame.incorrectWord)")
     
     }
 
@@ -46,7 +47,7 @@ class ViewController: UIViewController {
         sender.isEnabled = false
         let letterString = sender.configuration!.title!
         let letter = Character(letterString.lowercased())
-        activeGame.playerGuessed(letter: letter)
+        ActiveGame.playerGuessed(letter: letter)
         updateUI()
     }
 }
