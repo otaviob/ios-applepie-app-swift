@@ -11,11 +11,20 @@ var listOfWords = ["swift", "csharp", "java", "kotlin", "objectivec", "javascrip
 
 let incorrectMovesAllowed: Int = 7
 
-var totalWins = 0
-var totalLosses = 0
-
 
 class ViewController: UIViewController {
+    
+    var totalWins = 0 {
+        didSet {
+            newRound()
+        }
+    }
+    
+    var totalLosses = 0 {
+        didSet {
+            newRound()
+        }
+    }
 
     @IBOutlet weak var TreeImageView: UIImageView!
     @IBOutlet weak var WordLabel: UILabel!
@@ -27,23 +36,30 @@ class ViewController: UIViewController {
         newRound()
     }
     
-    var ActiveGame: Game!
+    var activeGame: Game!
     
     func newRound() {
         if !listOfWords.isEmpty {
             let newWord = listOfWords.removeFirst()
-            ActiveGame = Game(word: newWord, incorrectWord: incorrectMovesAllowed, guessedLetters: [])
-            
-            /// update
+            activeGame = Game(word: newWord, incorrectWord: incorrectMovesAllowed, guessedLetters: [])
+            enableLtterButtons(true)
             updateUI()
+        } else {
+            enableLtterButtons(false)
         }
         
         
     }
     
+    func enableLtterButtons(_ enabled: Bool) {
+        for button in WordButton {
+            button.isEnabled = enabled
+        }
+    }
+    
     func updateUI() {
         var letters = [String]()
-        for letter in ActiveGame.formatWord {
+        for letter in activeGame.formatWord {
             letters.append(String(letter))
         }
         
@@ -53,7 +69,7 @@ class ViewController: UIViewController {
         
         
         ScoreLabel.text = "Wins: \(totalWins) - Losses: \(totalLosses)"
-        TreeImageView.image = UIImage(named: "Tree \(ActiveGame.incorrectWord)")
+        TreeImageView.image = UIImage(named: "Tree \(activeGame.incorrectWord)")
     
     }
 
@@ -63,16 +79,16 @@ class ViewController: UIViewController {
         let letterString = sender.configuration!.title!
         let letter = Character(letterString.lowercased())
         
-        ActiveGame.playerGuessed(letter: letter)
+        activeGame.playerGuessed(letter: letter)
         
         /// update
-        updateUI()
+        updateGameState()
     }
     
     func updateGameState() {
-        if ActiveGame.incorrectWord == 0 {
+        if activeGame.incorrectWord == 0 {
             totalLosses += 1
-        } else if ActiveGame.word == ActiveGame.formatWord {
+        } else if activeGame.word == activeGame.formatWord {
             totalWins += 1
         } else {
             updateUI()
