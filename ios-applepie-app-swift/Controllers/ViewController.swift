@@ -7,9 +7,9 @@
 
 import UIKit
 
-var listOfWords = ["swift", "csharp", "java", "kotlin", "objectivec", "javascript", "reative"]
-
-let incorrectMovesAllowed: Int = 7
+//var listOfWords = ["swift", "csharp", "java", "kotlin", "objectivec", "javascript", "reative"]
+//
+//let incorrectMovesAllowed: Int = 7
 
 
 class ViewController: UIViewController {
