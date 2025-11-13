@@ -30,25 +30,53 @@ class ViewController: UIViewController {
     var ActiveGame: Game!
     
     func newRound() {
-        let newWord = listOfWords.removeFirst()
-        ActiveGame = Game(word: newWord, incorrectWord: incorrectMovesAllowed, guessedLetters: [])
-        updateUI()
+        if !listOfWords.isEmpty {
+            let newWord = listOfWords.removeFirst()
+            ActiveGame = Game(word: newWord, incorrectWord: incorrectMovesAllowed, guessedLetters: [])
+            
+            /// update
+            updateUI()
+        }
+        
         
     }
     
     func updateUI() {
-        WordLabel.text = ActiveGame.formatWord
-        ScoreLabel.text = "Wins: \(totalWins), Losses: \(totalLosses)"
+        var letters = [String]()
+        for letter in ActiveGame.formatWord {
+            letters.append(String(letter))
+        }
+        
+        let wordWithSpacing = letters.joined(separator: " ")
+        WordLabel.text = wordWithSpacing
+        
+        
+        
+        ScoreLabel.text = "Wins: \(totalWins) - Losses: \(totalLosses)"
         TreeImageView.image = UIImage(named: "Tree \(ActiveGame.incorrectWord)")
     
     }
 
     @IBAction func WordButtonPress(_ sender: UIButton) {
         sender.isEnabled = false
+        
         let letterString = sender.configuration!.title!
         let letter = Character(letterString.lowercased())
+        
         ActiveGame.playerGuessed(letter: letter)
+        
+        /// update
         updateUI()
+    }
+    
+    func updateGameState() {
+        if ActiveGame.incorrectWord == 0 {
+            totalLosses += 1
+        } else if ActiveGame.word == ActiveGame.formatWord {
+            totalWins += 1
+        } else {
+            updateUI()
+        }
     }
 }
 
